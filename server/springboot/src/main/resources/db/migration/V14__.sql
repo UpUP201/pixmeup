@@ -1,0 +1,1 @@
+CREATE INDEX idx_surveys_userid_createdat ON surveys(user_id, created_at DESC);

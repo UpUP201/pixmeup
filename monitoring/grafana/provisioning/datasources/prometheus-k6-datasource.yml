@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: K6 Test Metrics
+    type: prometheus
+    access: proxy
+    url: http://prometheus-k6:9090
+    isDefault: false
+    jsonData:
+      httpMethod: POST

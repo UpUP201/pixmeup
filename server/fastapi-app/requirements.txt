@@ -1,0 +1,54 @@
+# FastAPI 서버 관련
+fastapi==0.115.2
+uvicorn==0.34.2
+pydantic==2.11.4
+python-dotenv==1.0.1
+
+# MongoDB
+pymongo==4.6.3
+
+# 이미지 처리
+opencv-python==4.11.0.86
+pillow==11.2.1
+
+# 데이터 분석
+numpy<2.0
+pandas==2.2.3
+
+# 모델 추론 (YOLOv8 + PyTorch)
+torch==2.2.2
+torchvision==0.17.2
+ultralytics==8.3.123
+
+scikit-learn==1.6.1
+matplotlib==3.10.1
+seaborn==0.13.2
+
+# LLM 연동 (OpenAI API 사용 시)
+openai==1.78.1
+
+tqdm==4.67.1    # 추론 진행률 표시용 (선택)
+
+# DB 연동
+motor
+
+# 데이터 업로드
+python-multipart
+
+# Gemini
+google-generativeai>=0.4.1
+
+# Prometheus
+prometheus-fastapi-instrumentator
+
+boto3
+functions-framework
+requests
+
+# LLM + RAG + Langchain
+langchain==0.3.25
+langchain-community==0.3.24
+langchain-openai==0.3.17
+faiss-cpu==1.11.0
+pymupdf
+tenacity

@@ -1,0 +1,151 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.flywaydb.flyway' version '11.8.1'
+}
+
+group = 'com.corp'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot 기본
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.3.RELEASE'
+    testImplementation 'org.springframework.security:spring-security-test:6.4.2'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // Database
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Dev Tools
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test에서 lombok 사용을 위한 의존성 추가
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    // Logback
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'ch.qos.logback:logback-core'
+
+    // 캐싱처리
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+    // env 설정
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.26'
+
+    // H2 데이터베이스
+    testImplementation 'com.h2database:h2'
+
+    // json
+    implementation 'org.json:json:20231013'
+    implementation 'com.google.code.gson:gson:2.11.0'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // 위험군
+    implementation 'cool.graph:cuid-java:0.1.1'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'org.apache.commons:commons-text:1.13.0'
+    implementation 'com.google.api-client:google-api-client:2.7.1'
+
+    // lucy-xss-servlet
+//    implementation("com.navercorp.lucy:lucy-xss-servlet:2.0.1")
+
+    // MapStruct 라이브러리
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    // spring data jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    // QueryDSL Core
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+
+    // WebAuthn
+    implementation 'com.yubico:webauthn-server-core:2.6.0'
+    implementation 'com.yubico:webauthn-server-attestation:2.6.0'
+
+    // CoolSMS
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    // flyway
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
+    // aws
+    implementation 'software.amazon.awssdk:s3:2.31.40'
+
+    // Prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+}
+
+// Q-Type 클래스 생성 위치
+def querydslDir = "$buildDir/generated/querydsl"
+
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += [ querydslDir ]
+        }
+    }
+}
+
+tasks.named('clean') {
+    doLast {
+        file(querydslDir).deleteDir()
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

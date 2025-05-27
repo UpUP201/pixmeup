@@ -1,0 +1,41 @@
+package com.corp.pixelro.check.util;
+
+import com.corp.pixelro.check.entity.SightCheck;
+import com.corp.pixelro.check.type.PerspectiveType;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.Map;
+
+public class SightCheckProcessor {
+    public static Map<String, Object> process(SightCheck check) {
+        double leftSight = check.getLeftSight() / 10.0;
+        double rightSight = check.getRightSight() / 10.0;
+
+        boolean abnormal = leftSight < 0.5 || rightSight < 0.5;
+
+        return Map.of(
+                "left_eye_vision", leftSight,
+                "right_eye_vision", rightSight,
+                "sight_abnormal_flag", abnormal
+        );
+    }
+
+    public static SightCheck buildPredictionRow(SightCheck source) {
+        SightCheck prediction = SightCheck.builder()
+                .user(source.getUser())
+                .leftSight(source.getLeftSightPrediction())
+                .rightSight(source.getRightSightPrediction())
+                .aiResult("예측값입니다.")
+                .build();
+
+        // 프론트 구분을 위해 말도 안되는 future 날짜 부여
+        Field createdAtField = ReflectionUtils.findField(SightCheck.class, "createdAt");
+        createdAtField.setAccessible(true);
+//        ReflectionUtils.setField(createdAtField, prediction, LocalDateTime.of(9999, 99, 99, 99, 99));
+        ReflectionUtils.setField(createdAtField, prediction, LocalDateTime.of(9999, 12, 31, 23, 59));
+
+        return prediction;
+    }
+}

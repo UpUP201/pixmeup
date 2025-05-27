@@ -1,0 +1,39 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: name
+            values: ["springboot", "nginx", "fastapi"]
+    relabel_configs:
+      # Docker가 생성한 내부 라벨들은 제거 (선택 사항)
+      # - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+      #   action: labelmap
+      #   regex: com_docker_compose_project_(.+)
+      # 서비스 이름 라벨 추가 (compose_service)
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+        target_label: compose_service
+      # 컨테이너 이름 라벨 추가 (container) - 앞의 '/' 제거
+      - source_labels: [__meta_docker_container_name]
+        regex: '/?(.*)'
+        target_label: container
+      # 모든 로그 라인에 job 라벨 추가 (값: containers)
+      - source_labels: []
+        target_label: job
+        replacement: containers
+    pipeline_stages:
+      - multiline:
+          firstline: '^\S'  # 공백으로 시작하지 않는 라인을 새 로그의 시작으로 간주
+          max_wait_time: 3s   # 다음 라인을 기다리는 최대 시간
+          max_lines: 500      # 하나의 멀티라인 로그에 포함될 최대 라인 수 (필요시 조정)

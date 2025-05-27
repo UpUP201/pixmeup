@@ -1,0 +1,49 @@
+FASTAPI_BASE_URL: http://localhost:8000/test
+
+spring:
+  datasource:
+    jdbc-url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: false
+
+# CoolSMS 더미 설정 추가
+coolsms:
+  api:
+    key: test-api-key
+    secret: test-api-secret
+  sender:
+    phone: 010-0000-0000 # 더미 발신자 번호 추가
+# H2 콘솔 활성화 (선택 사항)
+# h2:
+#  console:
+#    enabled: true
+#    path: /h2-console  
+
+jwt:
+  secret: test-jwt-secret-key-longer-than-usual-for-testing
+  issuer: pixelro-auth-dev
+  subject-prefix: pixelro-dev
+  accessTokenExpiration: 1800000
+  refreshTokenExpiration: 604800000
+  temporaryTokenExpiration: 300000
+
+webauthn:
+  rp:
+    id: localhost
+    name: Pixelro Test RP
+    origin: http://localhost:8088
+
+app:
+  cookie:
+    domain: localhost
