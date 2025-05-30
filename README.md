@@ -137,7 +137,7 @@ fastapi-app/
 | 차윤영 | 백엔드 팀장            | [github.com/yuncof](https://github.com/yuncof)         |
 | 배성훈 | 백엔드 개발            | [github.com/baehoonbae](https://github.com/baehoonbae) |
 | 이동욱 | 백엔드 개발            | [github.com/2Ludy](https://github.com/2Ludy)           |
-| 오은지 | 프론트엔드 개발        | [github.com/oille12](https://github.com/oille12)       |
+| 오은지 | 프론트엔드 개발        | [github.com/oeg9176](https://github.com/oeg9176)       |
 | 윤이영 | 프론트엔드 개발        | [github.com/y20ng](https://github.com/y20ng)           |
 
 ---
