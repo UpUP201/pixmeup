@@ -20,8 +20,9 @@ public class PresbyopiaCheckProcessor {
         );
     }
 
+    // ** 리플렉션 제거 -> builder 패턴 변경 **
     public static PresbyopiaCheck buildPredictionRow(PresbyopiaCheck source) {
-        PresbyopiaCheck prediction = PresbyopiaCheck.builder()
+        return PresbyopiaCheck.builder()
                 .user(source.getUser())
                 .firstDistance(0.0)
                 .secondDistance(0.0)
@@ -30,12 +31,7 @@ public class PresbyopiaCheckProcessor {
                 .age(0)
                 .agePrediction(source.getAgePrediction())
                 .aiResult("예측값입니다.")
+                .createdAt(LocalDateTime.of(9999, 1, 1, 0, 0))
                 .build();
-
-        Field createdAtField = ReflectionUtils.findField(PresbyopiaCheck.class, "createdAt");
-        createdAtField.setAccessible(true);
-        ReflectionUtils.setField(createdAtField, prediction, LocalDateTime.of(9999, 1, 1, 0, 0));
-
-        return prediction;
     }
 }

@@ -37,11 +37,6 @@ public class FastApiServiceImpl implements FastApiService {
 
     // 분리된 DataService
     private final AredsDataService aredsDataService;
-    private final SurveyDataService surveyDataService;
-    private final SightDataService sightDataService;
-    private final PresbyopiaDataService presbyopiaDataService;
-    private final AmslerDataService amslerDataService;
-    private final MChartDataService mChartDataService;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
 
@@ -208,7 +203,6 @@ public class FastApiServiceImpl implements FastApiService {
     // 암슬러 검사 AI 판정 결과
     @Override
     public AmslerAiResponse getAmslerAiResponse(Long userId, List<AmslerCheck> lists, SurveyData surveyData) {
-//        SurveyData surveyData = surveyDataService.getLatestSurveyData(userId);
         List<AmslerTest> tests = lists.stream()
                 .map(AmslerTest::from)
                 .toList();
@@ -231,7 +225,6 @@ public class FastApiServiceImpl implements FastApiService {
     // MChart 검사 AI 판정 결과
     @Override
     public MChartAiResponse getMChartAiResponse(Long userId, List<MChartCheck> lists, SurveyData surveyData) {
-//        SurveyData surveyData = surveyDataService.getLatestSurveyData(userId);
         List<MChartTest> tests = lists.stream()
                 .map(MChartTest::from)
                 .toList();
