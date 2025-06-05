@@ -26,7 +26,7 @@ public class PresbyopiaCheckProcessor {
                 .firstDistance(0.0)
                 .secondDistance(0.0)
                 .thirdDistance(0.0)
-                .avgDistance(source.getAvgDistance())
+                .avgDistance(0.0)
                 .age(0)
                 .agePrediction(source.getAgePrediction())
                 .aiResult("예측값입니다.")

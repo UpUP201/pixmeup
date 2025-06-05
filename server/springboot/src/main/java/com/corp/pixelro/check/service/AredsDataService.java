@@ -44,7 +44,7 @@ public class AredsDataService {
         }
         MChartCheck mchart = mChartDataService.selectLatestMChartCheck(userId);
         if (mchart == null) {
-            new EyeCheckMchartException(ErrorCode.MCHART_NOT_EXISTS);
+            throw new EyeCheckMchartException(ErrorCode.MCHART_NOT_EXISTS);
         }
 
         Map<String, Object> surveyMap = SurveyProcessor.process(survey);
