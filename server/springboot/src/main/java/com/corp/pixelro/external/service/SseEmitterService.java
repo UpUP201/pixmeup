@@ -34,6 +34,7 @@ public class SseEmitterService {
         }
 
         SseEmitter emitter = new SseEmitter(60_000L);
+        // ** 나중에 전송할 때 emitter를 찾기 위함 **
         emitters.put(emitterId, emitter);
 
         emitter.onTimeout(() -> {
@@ -101,7 +102,9 @@ public class SseEmitterService {
             try {
                 log.info("[SSE] 이미지 예측 결과 전송 시작 - emitterId: {}, resultId: {}", emitterId, result.id());
 
-                emitter.send(SseEmitter.event().name("image-result").data(result));
+                emitter.send(SseEmitter.event()
+                        .name("image-result")
+                        .data(result));
                 emitter.complete();
 
                 log.info("[SSE] 이미지 예측 결과 전송 완료 - emitterId: {}", emitterId);
@@ -119,7 +122,9 @@ public class SseEmitterService {
         SseEmitter emitter = emitters.get(emitterId);
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("areds-error").data(message));
+                emitter.send(SseEmitter.event()
+                        .name("areds-error")
+                        .data(message));
                 emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);
@@ -132,7 +137,9 @@ public class SseEmitterService {
         SseEmitter emitter = emitters.get(emitterId);
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name("image-error").data(message));
+                emitter.send(SseEmitter.event()
+                        .name("image-error")
+                        .data(message));
                 emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);

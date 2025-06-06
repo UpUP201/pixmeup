@@ -25,6 +25,7 @@ public class AmslerCheckProcessor {
         boolean abnormal = distorted + blacked + whited > 0;
 
         Map<String, Object> map = new HashMap<>();
+        map.put("mchart_check_id", check.getId());
         map.put("amsler_normal_count", normal);
         map.put("amsler_distorted_count", distorted);
         map.put("amsler_blacked_count", blacked);

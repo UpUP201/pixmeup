@@ -11,6 +11,7 @@ public class MChartCheckProcessor {
                 || check.getRightEyeHor() >= 5 || check.getRightEyeVer() >= 5;
 
         Map<String, Object> map = new HashMap<>();
+        map.put("amsler_check_id", check.getId());
         map.put("left_eye_horizontal", check.getLeftEyeHor());
         map.put("left_eye_vertical", check.getLeftEyeVer());
         map.put("right_eye_horizontal", check.getRightEyeHor());

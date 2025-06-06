@@ -37,14 +37,8 @@ public class FastApiServiceImpl implements FastApiService {
 
     // 분리된 DataService
     private final AredsDataService aredsDataService;
-    private final SurveyDataService surveyDataService;
-    private final SightDataService sightDataService;
-    private final PresbyopiaDataService presbyopiaDataService;
-    private final AmslerDataService amslerDataService;
-    private final MChartDataService mChartDataService;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
-
 
     @Value("${fastapi.base-url}")
     private String baseUrl;
@@ -53,6 +47,7 @@ public class FastApiServiceImpl implements FastApiService {
     @Transactional
     public AredsResultResponse predictAreds(Long userId) {
         AredsPredictionInput input = aredsDataService.prepareAredsInput(userId);
+        // ** 추후 dto로 변경 필요 -> 타입 안정성 위해 **
         Map<String, Object> requestBody = AredsRequestBuilder.toRequestMap(input, userId);
 
         return fastApiWebClient.post()
@@ -104,7 +99,7 @@ public class FastApiServiceImpl implements FastApiService {
 
         return fastApiWebClient.post()
                 .uri(fullUrl)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON) // ** map이 아니므로 json 명시 필요 **
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(ImagePredictionResponse.class)
@@ -159,6 +154,7 @@ public class FastApiServiceImpl implements FastApiService {
     public SightPredictResponse predictSight(Long userId, List<SightHistoryItem> history) {
         return fastApiWebClient.post()
                 .uri(baseUrl + "/predict/sight")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new SightPredictRequest(userId, history))
                 .retrieve()
                 .bodyToMono(SightPredictResponse.class)
@@ -169,6 +165,7 @@ public class FastApiServiceImpl implements FastApiService {
     public EyeAgePredictResponse predictEyeAge(Long userId, List<Integer> history) {
         return fastApiWebClient.post()
                 .uri(baseUrl + "/predict/eye-age")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new EyeAgePredictRequest(userId, history))
                 .retrieve()
                 .bodyToMono(EyeAgePredictResponse.class)
@@ -184,6 +181,7 @@ public class FastApiServiceImpl implements FastApiService {
 
         return fastApiWebClient.post()
                 .uri(baseUrl + "/llm/sight")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new SightRequest(surveyData, sightTests))
                 .retrieve()
                 .bodyToMono(SightAiResponse.class)
@@ -199,6 +197,7 @@ public class FastApiServiceImpl implements FastApiService {
 
         return fastApiWebClient.post()
                 .uri(baseUrl + "/llm/presbyopia")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new PresbyopiaRequest(surveyData, tests))
                 .retrieve()
                 .bodyToMono(PresbyopiaAiResponse.class)
@@ -208,20 +207,13 @@ public class FastApiServiceImpl implements FastApiService {
     // 암슬러 검사 AI 판정 결과
     @Override
     public AmslerAiResponse getAmslerAiResponse(Long userId, List<AmslerCheck> lists, SurveyData surveyData) {
-//        SurveyData surveyData = surveyDataService.getLatestSurveyData(userId);
         List<AmslerTest> tests = lists.stream()
                 .map(AmslerTest::from)
                 .toList();
 
-        try {
-            String json = objectMapper.writeValueAsString(new AmslerRequest(surveyData, tests));
-            System.out.println("[보내는 JSON 확인] " + json);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
         return fastApiWebClient.post()
                 .uri(baseUrl + "/llm/amsler")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new AmslerRequest(surveyData, tests))
                 .retrieve()
                 .bodyToMono(AmslerAiResponse.class)
@@ -231,13 +223,13 @@ public class FastApiServiceImpl implements FastApiService {
     // MChart 검사 AI 판정 결과
     @Override
     public MChartAiResponse getMChartAiResponse(Long userId, List<MChartCheck> lists, SurveyData surveyData) {
-//        SurveyData surveyData = surveyDataService.getLatestSurveyData(userId);
         List<MChartTest> tests = lists.stream()
                 .map(MChartTest::from)
                 .toList();
 
         return fastApiWebClient.post()
                 .uri(baseUrl + "/llm/mchart")
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new MChartRequest(surveyData, tests))
                 .retrieve()
                 .bodyToMono(MChartAiResponse.class)

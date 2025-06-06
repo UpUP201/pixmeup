@@ -12,6 +12,8 @@ public class SurveyProcessor {
         int ageEstimate = estimateAgeFromGroup(survey.getAge());
 
         Map<String, Object> map = new HashMap<>();
+        // ** 외부에서 추가하던 id를 processor에서 추가 **
+        map.put("survey_id", survey.getId());
         map.put("survey_age", ageEstimate);
         map.put("survey_gender", survey.getGender().name());
         map.put("survey_glasses_wearing", survey.isGlasses());

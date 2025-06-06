@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class FastApiWebClientConfig {
 
+    // ** 커스터마이징한 ObjectMapper로 snake_case를 처리하면, dto에 @JsonProperty 필요 없음 **
+    // ** 수정 필요 **
     @Bean
     public WebClient fastApiWebClient(ObjectMapper objectMapper) {
         ExchangeStrategies strategies = ExchangeStrategies.builder()

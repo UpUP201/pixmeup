@@ -71,7 +71,6 @@ public class S3Service {
         if (fileName.endsWith(".txt")) {
             key = "user_data/labels/" + fileName;
         } else {
-            // 확장자 관계 없이 image이면 pseudo/images로 간주
             key = "user_data/images/" + fileName;
         }
 
@@ -138,30 +137,6 @@ public class S3Service {
         return url;
     }
 
-    public String makeS3Key(Long userId, String originalFileName) {
-        String extension = "";
-        int idx = originalFileName.lastIndexOf('.');
-        if (idx > 0) {
-            extension = originalFileName.substring(idx);
-        }
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        return "user_data/" + userId + "-" + now + extension;
-    }
-
-    public void putRawBytesToPresignedUrl(String presignedUrl, byte[] fileBytes, String contentType) {
-        try{
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(contentType));
-            HttpEntity<byte[]> entity = new HttpEntity<>(fileBytes, headers);
-
-            log.info("📤 S3 raw bytes put: presignedUrl={}, fileBytes={}, contentType={}", presignedUrl, fileBytes.length, contentType);
-            new RestTemplate().exchange(presignedUrl, HttpMethod.PUT, entity, String.class);
-        }catch(Exception e){
-            log.error("S3 raw bytes put error: {}", e.getMessage());
-            throw e;
-        }
-    }
-
     public String downloadLatestModelFile() {
         // 1. 최신 모델 키 찾기
         ListObjectsV2Response response = s3Client.listObjectsV2(ListObjectsV2Request.builder()
@@ -192,6 +167,7 @@ public class S3Service {
                 ResponseTransformer.toFile(targetFile)
         );
 
+        // ** 로깅, 추적용 반환 **
         return latestKey;
     }
 

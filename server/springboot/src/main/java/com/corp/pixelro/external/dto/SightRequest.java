@@ -6,5 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record SightRequest(
 	SurveyData survey,
-	@JsonProperty("sight_test_list") List<SightTest> sightTestList
+
+	@JsonProperty("sight_test_list")
+	List<SightTest> sightTestList
 ) {}

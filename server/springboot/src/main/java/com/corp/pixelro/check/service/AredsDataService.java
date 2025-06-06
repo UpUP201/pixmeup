@@ -25,7 +25,6 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AredsDataService {
 
     private final AmslerDataService amslerDataService;
@@ -44,18 +43,12 @@ public class AredsDataService {
         }
         MChartCheck mchart = mChartDataService.selectLatestMChartCheck(userId);
         if (mchart == null) {
-            new EyeCheckMchartException(ErrorCode.MCHART_NOT_EXISTS);
+            throw new EyeCheckMchartException(ErrorCode.MCHART_NOT_EXISTS);
         }
 
         Map<String, Object> surveyMap = SurveyProcessor.process(survey);
         Map<String, Object> amslerMap = AmslerCheckProcessor.process(amsler);
         Map<String, Object> mchartMap = MChartCheckProcessor.process(mchart);
-
-
-        // Processor에서 ID도 포함되도록 되어 있어야 함
-        surveyMap.put("survey_id", survey.getId());
-        mchartMap.put("mchart_check_id", mchart.getId());
-        amslerMap.put("amsler_check_id", amsler.getId());
 
         return AredsRequestBuilder.buildFrom(userId, surveyMap, mchartMap, amslerMap);
     }
