@@ -22,20 +22,15 @@ public class SightCheckProcessor {
         );
     }
 
+    // ** 리플렉션 제거 -> builder 패턴 추가 **
     public static SightCheck buildPredictionRow(SightCheck source) {
-        SightCheck prediction = SightCheck.builder()
+        return SightCheck.builder()
                 .user(source.getUser())
                 .leftSight(source.getLeftSightPrediction())
                 .rightSight(source.getRightSightPrediction())
                 .aiResult("예측값입니다.")
+                .createdAt(LocalDateTime.of(9999, 12, 31, 23, 59))
                 .build();
 
-        // 프론트 구분을 위해 말도 안되는 future 날짜 부여
-        Field createdAtField = ReflectionUtils.findField(SightCheck.class, "createdAt");
-        createdAtField.setAccessible(true);
-//        ReflectionUtils.setField(createdAtField, prediction, LocalDateTime.of(9999, 99, 99, 99, 99));
-        ReflectionUtils.setField(createdAtField, prediction, LocalDateTime.of(9999, 12, 31, 23, 59));
-
-        return prediction;
     }
 }

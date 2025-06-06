@@ -69,22 +69,6 @@ public class CheckController {
                 }
             """)
                     )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "시력 검사 결과 없음",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(value = """
-                {
-                  "timestamp": "2025-05-09T12:00:00",
-                  "name": "SIGHT_CHECK_NOT_FOUND",
-                  "status": 404,
-                  "message": "시력검사 결과가 존재하지 않습니다."
-                }
-            """)
-                    )
             )
     })
     @GetMapping("/vision")
@@ -116,15 +100,20 @@ public class CheckController {
                 {
                   "status": 200,
                   "message": "Success",
-                  "data": [
-                    {
-                      "dateTime": "2025-05-09T00:00:00",
-                      "hasSight": true,
-                      "hasPresbyopia": false,
-                      "hasAmsler": true,
-                      "hasMChart": true
-                    }
-                  ],
+                  "data": {
+                        "content": [
+                            {
+                                "dateTime": "2025-05-09T00:00:00",
+                                "hasSight": true,
+                                "hasPresbyopia": false,
+                                "hasAmsler": true,
+                                "hasMChart": true
+                            }
+                        ],
+                        "hasNext": true,
+                        "numberOfElements": 1,
+                        "empty": false
+                  },
                   "timestamp": "2025-05-09T12:00:00"
                 }
             """)
@@ -186,22 +175,6 @@ public class CheckController {
                 }
             """)
                     )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "결과 없음",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(value = """
-                {
-                  "timestamp": "2025-05-09T12:00:00",
-                  "name": "SIGHT_CHECK_NOT_FOUND",
-                  "status": 404,
-                  "message": "시력검사 결과가 존재하지 않습니다."
-                }
-            """)
-                    )
             )
     })
     @GetMapping("/myopia")
@@ -223,8 +196,9 @@ public class CheckController {
         }
 
         List<SightCheckResponse> result;
-        if (parsedDateTime == null) {
+        if (parsedDateTime == null || parsedDateTime.toString().isBlank()) {
             LocalDateTime latestDateTime = sightDataService.selectLatestSight(userDetail.getUserId());
+            // 타겟 datetime이 없을 시, 가장 최근의 날짜로 검색
             result = sightDataService.selectSightContextWithPrediction(userDetail.getUserId(), latestDateTime);
         } else {
             result = sightDataService.selectSightContextWithPrediction(userDetail.getUserId(), parsedDateTime);
@@ -258,22 +232,6 @@ public class CheckController {
                 }
             """)
                     )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "결과 없음",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(value = """
-                {
-                  "timestamp": "2025-05-09T12:00:00",
-                  "name": "PRESBYOPIA_CHECK_NOT_FOUND",
-                  "status": 404,
-                  "message": "노안검사 결과가 존재하지 않습니다."
-                }
-            """)
-                    )
             )
     })
     @GetMapping("/presbyopia")
@@ -286,7 +244,7 @@ public class CheckController {
             @RequestParam(required = false) String targetDateTime
     ) {
         LocalDateTime parsedDateTime = null;
-        if (targetDateTime != null) {
+        if (targetDateTime != null && !targetDateTime.isBlank()) {
             try {
                 parsedDateTime = LocalDateTime.parse(targetDateTime);
             } catch (DateTimeException e) {
@@ -298,6 +256,7 @@ public class CheckController {
 
         if (parsedDateTime == null || parsedDateTime.toString().isBlank()) {
             LocalDateTime latestDateTime = presbyopiaDataService.selectLatestPresbyopia(userDetail.getUserId());
+            // 타겟 datetime이 없을 시, 가장 최근의 날짜로 검색
             result = presbyopiaDataService.selectPresbyopiaContextWithPrediction(userDetail.getUserId(), latestDateTime);
         } else {
             result = presbyopiaDataService.selectPresbyopiaContextWithPrediction(userDetail.getUserId(), parsedDateTime);
@@ -340,22 +299,6 @@ public class CheckController {
                 }
             """)
                     )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "결과 없음",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(value = """
-                {
-                  "timestamp": "2025-05-09T12:00:00",
-                  "name": "AMSLER_CHECK_NOT_FOUND",
-                  "status": 404,
-                  "message": "황반변성 검사 결과가 존재하지 않습니다."
-                }
-            """)
-                    )
             )
     })
     @GetMapping("/macular")
@@ -388,6 +331,44 @@ public class CheckController {
         return ResponseEntity.ok().body(GlobalResponse.success(result));
     }
 
+    @Operation(
+            summary = "QR 코드 기반 데이터 저장",
+            description = "문진 및 시력/노안/암슬러/엠차트 검사 데이터를 저장합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "저장 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = """
+                {
+                  "status": 200,
+                  "message": "Success",
+                  "data": "정보가 정상적으로 저장되었습니다.",
+                  "timestamp": "2025-05-09T12:00:00"
+                }
+            """)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                {
+                  "timestamp": "2025-05-09T12:00:00",
+                  "name": "INTERNAL_SERVER_ERROR",
+                  "status": 500,
+                  "message": "서버 오류가 발생했습니다"
+                }
+            """)
+                    )
+            )
+    })
     @PostMapping("/qr")
     public ResponseEntity<GlobalResponse<String>> createData(
             @RequestBody QrRequest request,

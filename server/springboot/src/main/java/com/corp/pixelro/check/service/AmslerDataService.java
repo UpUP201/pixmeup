@@ -29,7 +29,7 @@ public class AmslerDataService {
                 .orElse(null);
     }
 
-    // 해당 사용자의 가장 최근 암슬러 결과 조회
+    // 해당 사용자의 가장 최근 암슬러 결과 날짜 조회
     public LocalDateTime selectLatestAmsler(Long userId) {
         AmslerCheck result = selectLatestAmslerCheck(userId);
         return result == null ?

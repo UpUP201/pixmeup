@@ -320,6 +320,7 @@ public class CheckServiceImpl implements CheckService {
         );
         surveyService.createSurvey(surveyRequest, user);
 
+        // ** of 형식으로 리팩토링 **
         SurveyData surveyData = new SurveyData(
                 surveyRequest.userId(),
                 surveyRequest.age(),
@@ -361,6 +362,11 @@ public class CheckServiceImpl implements CheckService {
         // 가장 최근 예측 결과 조회
         AredsResultResponse lastResult = fastApiService.getLatestAredsResultByUserId(userId);
         if (lastResult == null) return true; // 예측 결과 없음 → 예측 필요
+
+        // ** 셋 중 하나라도 null일 때의 예외처리 필요 **
+        if (latestAmslerId == null || latestMchartId == null || latestSurveyId == null) {
+            return true; // 입력 일부라도 없으면 예측 필요
+        }
 
         return !latestAmslerId.equals(lastResult.amslerCheckId())
                 || !latestMchartId.equals(lastResult.mChartCheckId())

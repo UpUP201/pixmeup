@@ -78,17 +78,23 @@ public class PresbyopiaDataService {
         List<PresbyopiaCheck> result = new ArrayList<>();
 
         if (isLatest) {
+            // 검사 결과 최대 6개, 그보다 적으면 그만큼만
             int end = Math.min(6, all.size());
             result.addAll(all.subList(0, end));
+            // 가장 최근 검사 결과 기준으로 예측 행 생성
             result.add(PresbyopiaCheckProcessor.buildPredictionRow(all.get(0))); // 예측값 추가
         } else {
+            // 검사 결과 기준 앞으로 3개 확보하려고 시도
             int start = Math.max(0, index - 3);
+            // start로부터 7개 확보, 리스트 크기 넘어가지 않도록 all.size()로 제한
             int end = Math.min(all.size(), start + 7);
 
+            // 7개보다 작고 start가 0보다 클 경우, 범위 조정
             if (end - start < 7 && start > 0) {
                 start = Math.max(0, end - 7);
             }
 
+            // 조정된 범위를 리스트에 추가
             result.addAll(all.subList(start, end)); // 예측값 없음
         }
 
