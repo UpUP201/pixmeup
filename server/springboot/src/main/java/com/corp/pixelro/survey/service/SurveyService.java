@@ -16,6 +16,7 @@ public interface SurveyService {
     // 해당 사용자의 가장 최근 문진 조회
     Survey selectLatestSurvey(Long userId);
 
+    // 문진 추가
     void createSurvey(SurveyRequest request, User user);
 
 }

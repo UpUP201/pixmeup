@@ -2,7 +2,9 @@ package com.corp.pixelro.external.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
+@Builder
 @Schema(description = "AREDS 예측 결과 DTO")
 public record AredsResultResponse(
         @Schema(description = "결과 ID", example = "66410e85f6ef23cde8b40192")

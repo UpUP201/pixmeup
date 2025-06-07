@@ -111,10 +111,19 @@ public class FastApiController {
     ) {
         AredsResultResponse result = fastApiService.getAredsResultById(resultId);
         String userName = userService.getUser(userDetail.getUserId()).getName();
-        AredsResultResponse response = new AredsResultResponse(
-            result.id(), result.userId(), result.riskPercent(), result.summary(), result.risk(), result.createdAt(),
-            result.mChartCheckId(), result.amslerCheckId(), result.surveyId(), userName
-        );
+        // ** 유지보수성을 위해 builder 패턴으로 변경
+        AredsResultResponse response = AredsResultResponse.builder()
+                .id(result.id())
+                .userId(result.userId())
+                .riskPercent(result.riskPercent())
+                .summary(result.summary())
+                .risk(result.risk())
+                .createdAt(result.createdAt())
+                .mChartCheckId(result.mChartCheckId())
+                .amslerCheckId(result.amslerCheckId())
+                .surveyId(result.surveyId())
+                .userName(userName)
+                .build();
         return ResponseEntity.ok().body(GlobalResponse.success(response));
     }
 
@@ -233,15 +242,6 @@ public class FastApiController {
             summary = "AREDS 예측 결과 실시간 구독",
             description = "SSE를 통해 AREDS 예측 결과를 실시간으로 수신합니다."
     )
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "SSE 스트림 연결 성공",
-//            content = @Content(mediaType = "text/event-stream")
-//    )
-//    @GetMapping(value = "/diagnosis/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//    public SseEmitter subscribeAreds(@AuthenticationPrincipal CustomUserDetails userDetail) {
-//        return sseEmitterService.createEmitter(userDetail.getUserId());
-//    }
     @GetMapping(value = "/diagnosis/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribeAreds(
         @RequestParam String emitterId
@@ -268,15 +268,6 @@ public class FastApiController {
             summary = "이미지 예측 결과 실시간 구독",
             description = "SSE를 통해 이미지 예측 결과를 실시간으로 수신합니다."
     )
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "SSE 스트림 연결 성공",
-//            content = @Content(mediaType = "text/event-stream")
-//    )
-//    @GetMapping(value = "/image/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//    public SseEmitter subscribeImage(@AuthenticationPrincipal CustomUserDetails userDetail) {
-//        return sseEmitterService.createEmitter(userDetail.getUserId());
-//    }
     @GetMapping(value = "/image/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribeImage(
         @RequestParam String emitterId
