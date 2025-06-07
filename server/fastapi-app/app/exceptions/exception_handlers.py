@@ -1,4 +1,4 @@
-from fastapi import Request
+from fastapi import Request # FastAPI에서 들어온 HTTP 요청 정보 전체를 담고 있는 객체
 from fastapi.responses import JSONResponse
 from app.schemas.error_response import ErrorResponse
 from app.exceptions.custom_exception import CustomAppException

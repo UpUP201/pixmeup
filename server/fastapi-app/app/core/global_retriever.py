@@ -1,5 +1,3 @@
-# app/core/global_retriever.py
-
 import os
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings

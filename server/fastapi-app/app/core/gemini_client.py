@@ -1,14 +1,9 @@
 import asyncio
 import os
-from typing import List
 import google.generativeai as genai
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 USE_MOCK = os.getenv("USE_MOCK", "false").lower() == "true"
-
-# models = genai.list_models()
-# for m in models:
-#     print(m.name, m.supported_generation_methods)
 
 model = genai.GenerativeModel("models/gemini-2.0-flash")
 

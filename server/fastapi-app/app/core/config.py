@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient 
-import boto3
 
 load_dotenv()
 
