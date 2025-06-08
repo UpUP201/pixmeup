@@ -5,7 +5,7 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE}
   application:
-    name: pixelro
+    name: pixmeup
   jackson:
     time-zone: Asia/Seoul
   custom:
@@ -15,7 +15,7 @@ spring:
     scheduling:
       pool:
         size: 5
-      thread-name-prefix: pixelro-scheduler-
+      thread-name-prefix: pixmeup-scheduler-
   servlet:
     multipart:
       max-file-size: 10MB
@@ -135,8 +135,8 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET:your-development-jwt-secret-key-which-is-long-enough}
-  issuer: pixelro-auth-dev
-  subject-prefix: pixelro-dev
+  issuer: pixmeup-auth-dev
+  subject-prefix: pixmeup-dev
   accessTokenExpiration: ${JWT_ACCESS_TOKEN_EXPIRATION:1800000}
   refreshTokenExpiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}
   temporaryTokenExpiration: ${JWT_TEMPORARY_TOKEN_EXPIRATION:300000}
@@ -175,8 +175,8 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET}
-  issuer: pixelro-auth
-  subject-prefix: pixelro
+  issuer: pixmeup-auth
+  subject-prefix: pixmeup
   accessTokenExpiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
   refreshTokenExpiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
   temporaryTokenExpiration: ${JWT_TEMPORARY_TOKEN_EXPIRATION}
@@ -247,8 +247,8 @@ logging:
 # 🔑 JWT - 테스트용 시크릿 사용
 jwt:
   secret: ${JWT_SECRET_TEST} # .env 에 정의 필요
-  issuer: pixelro-auth-loadtest
-  subject-prefix: pixelro-loadtest
+  issuer: pixmeup-auth-loadtest
+  subject-prefix: pixmeup-loadtest
   accessTokenExpiration: ${JWT_ACCESS_TOKEN_EXPIRATION_TEST:1800000}
   refreshTokenExpiration: ${JWT_REFRESH_TOKEN_EXPIRATION_TEST:604800000}
   temporaryTokenExpiration: ${JWT_TEMPORARY_TOKEN_EXPIRATION_TEST:300000} 
@@ -257,7 +257,7 @@ jwt:
 webauthn:
   rp:
     id: ${WEBAUTHN_RP_ID_TEST:localhost-test}
-    name: ${WEBAUTHN_RP_NAME_TEST:Pixelro LoadTest}
+    name: ${WEBAUTHN_RP_NAME_TEST:pixmeup LoadTest}
     origin: ${WEBAUTHN_RP_ORIGIN_TEST:http://localhost:8088}
 
 # Cookie Domain
