@@ -1,7 +1,7 @@
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException   # FastAPI의 라우터 객체를 만들기 위한 클래스
-from app.schemas.areds import AREDSInput, AREDSResult   # 정의된 DTO 불러옴
+from fastapi import APIRouter   # FastAPI의 라우터 객체를 만들기 위한 클래스
+from app.schemas.areds import AREDSInput, AREDSResult
 from app.services.areds_service import save_areds_result, get_areds_result, get_latest_areds_by_user, make_areds_summary, map_to_model_input   # service 계층 함수 불러옴
 from app.models.areds_predictor import predict_amd_risk
 from datetime import datetime

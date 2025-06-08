@@ -36,6 +36,7 @@ def create_zip_dataset():
     zip_filename = f"dataset_{now.strftime('%Y%m%d_%H%M%S')}.zip"
     zip_path = os.path.join(OUTPUT_DIR, zip_filename)
 
+    # w: 쓰기 모드, ZIP_DEFLATED: 압축 방식
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for filename in os.listdir(IMAGES_DIR):
             if should_include(filename, last_zip_time):
@@ -65,6 +66,7 @@ def upload_zip_via_spring(user_id: int, zip_path: str):
         res.raise_for_status()
         print("✅ Spring 업로드 요청 완료")
 
+# 직접 실행했을 때만 작동하는 메서드 정의
 if __name__ == "__main__":
     zip_path = create_zip_dataset()
     upload_zip_via_spring(user_id=0, zip_path=zip_path)

@@ -1,7 +1,9 @@
 import numpy as np
+from app.exceptions.custom_exception import CustomAppException
+from app.enums.error_code import ErrorCode
 
 def predict_amd_risk(data: dict) -> dict:
-    # 논문 기반 회귀 계수 (PMC4082761 가번번)
+    # 논문 기반 회귀 계수 (PMC4082761 가번)
     try:
         beta = {
             "intercept": -3.5,
@@ -27,6 +29,4 @@ def predict_amd_risk(data: dict) -> dict:
         }
 
     except Exception:
-        from app.exceptions.custom_exception import CustomAppException
-        from app.enums.error_code import ErrorCode
         raise CustomAppException(ErrorCode.INTERNAL_SERVER_ERROR)

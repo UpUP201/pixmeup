@@ -27,5 +27,6 @@ def reload_model():
 
 def predict_image(image_path: str):
     model = get_model()
+    # 이미지 추론 명령어
     results = model(image_path)
     return results

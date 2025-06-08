@@ -1,20 +1,19 @@
+from motor.motor_asyncio import AsyncIOMotorClient
+from datetime import datetime
+from bson import ObjectId
 from app.models.yolo import predict_image
 from app.schemas.image import ImagePredictionResponse
 from app.core.gemini_client import get_gemini_response
 from app.constants.disease_labels import DISEASE_LABEL_KO, YOLO_CLASS_MAP
 from app.core import config
-from motor.motor_asyncio import AsyncIOMotorClient
-from datetime import datetime
-import re
-from bson import ObjectId
 from app.exceptions.custom_exception import CustomAppException
 from app.enums.error_code import ErrorCode
-from app.core.model_loader import model
+from app.utils.s3_util import upload_file_by_proxy
 from PIL import Image
 import urllib.request
 import tempfile
 import os
-from app.utils.s3_util import upload_file_by_proxy
+import re
 import logging
 
 client = AsyncIOMotorClient(config.MONGO_URI)

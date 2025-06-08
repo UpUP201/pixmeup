@@ -8,12 +8,12 @@ def get_txt_filename(image_filename: str) -> str:
 def build_data_yaml(classes: list[str]) -> str:
     class_list = "\n".join([f"  - '{c}'" for c in classes])
     return f"""
-train: images
-val: images
-nc: {len(classes)}
-names:
-{class_list}
-""".strip()
+        train: images
+        val: images
+        nc: {len(classes)}
+        names:
+        {class_list}
+    """.strip()
 
 def extract_timestamp_from_filename(filename: str) -> datetime:
     """

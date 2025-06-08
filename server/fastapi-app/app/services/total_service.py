@@ -1,7 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from app.core import config
 from datetime import datetime
-from pymongo import DESCENDING
+from app.core import config
 from app.exceptions.custom_exception import CustomAppException
 from app.enums.error_code import ErrorCode
 import logging

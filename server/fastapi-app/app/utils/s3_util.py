@@ -26,6 +26,9 @@ def upload_file_by_proxy(user_id: int, filename: str, local_path: str, content_t
         headers={"Content-Type": content_type},
         timeout=10
     )
-    f"upload complete: {upload_res}"
 
+    # 완료 확인
+    print(f"upload complete: {upload_res}")
+
+    # s3 경로 반환
     return res.json()["data"]["s3Key"]

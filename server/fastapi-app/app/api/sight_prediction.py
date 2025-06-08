@@ -4,9 +4,7 @@ from app.services.sight_prediction_service import predict_next_sight
 from app.exceptions.custom_exception import CustomAppException
 from app.enums.error_code import ErrorCode
 
-router = APIRouter(prefix="/predict/sight", tags=["Sight Prediction"])
-
-@router.post("", response_model=SightPredictionResponse)
+@router.post("/predict/sight", response_model=SightPredictionResponse)
 async def predict_sight(request: SightPredictionRequest):
     if len(request.history) < 6:
         raise CustomAppException(ErrorCode.INVALID_INPUT_VALUE)
